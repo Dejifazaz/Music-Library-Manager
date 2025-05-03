@@ -1,29 +1,42 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-4">Create Track</h1>
+    <div class="container">
+        <h1>Create New Track</h1>
 
-    <form method="POST" action="{{ route('tracks.store') }}">
-        @csrf
-        <div class="mb-4">
-            <label>Title:</label>
-            <input name="title" class="border p-2 w-full" required>
-        </div>
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <div class="mb-4">
-            <label>Duration (mins):</label>
-            <input name="duration" type="number" class="border p-2 w-full" required>
-        </div>
+        <form action="{{ route('tracks.store') }}" method="POST">
+            @csrf
 
-        <div class="mb-4">
-            <label>Album:</label>
-            <select name="album_id" class="border p-2 w-full">
-                @foreach ($albums as $album)
-                    <option value="{{ $album->id }}">{{ $album->title }}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="title">Track Title</label>
+                <input type="text" name="title" id="title" class="form-control" required>
+            </div>
 
-        <button class="bg-green-500 text-white px-4 py-2 rounded">Save Track</button>
-    </form>
+            <div class="form-group">
+                <label for="duration">Duration (in seconds)</label>
+                <input type="number" name="duration" id="duration" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="album_id">Album</label>
+                <select name="album_id" id="album_id" class="form-control" required>
+                    @foreach($albums as $album)
+                        <option value="{{ $album->id }}">{{ $album->title }} - {{ $album->artist }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Create Track</button>
+        </form>
+    </div>
 @endsection

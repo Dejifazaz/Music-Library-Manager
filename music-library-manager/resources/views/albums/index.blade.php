@@ -1,23 +1,36 @@
-<!-- resources/views/albums/index.blade.php -->
-
 @extends('layouts.app')
 
 @section('content')
     <div class="container">
-        <h1>Albums</h1>
-        <a href="{{ route('albums.create') }}" class="btn btn-primary">Create New Album</a>
-        <ul>
-            @foreach($albums as $album)
-                <li>
-                    {{ $album->title }} by {{ $album->artist }}
-                    <a href="{{ route('albums.edit', $album) }}">Edit</a>
-                    <form action="{{ route('albums.destroy', $album) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Delete</button>
-                    </form>
-                </li>
+        <h1>All Albums</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($albums as $album)
+                <tr>
+                    <td>{{ $album->title }}</td>
+                    <td>{{ $album->artist }}</td>
+                    <td>
+                        <a href="{{ route('albums.edit', $album->id) }}" class="btn btn-warning">Edit</a>
+                        <form action="{{ route('albums.destroy', $album->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
             @endforeach
-        </ul>
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-center">
+            {{ $albums->links() }} <!-- Pagination links -->
+        </div>
     </div>
 @endsection

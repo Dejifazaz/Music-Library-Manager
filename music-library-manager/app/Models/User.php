@@ -22,6 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    public function favorites()
+    {
+        return $this->belongsToMany(\App\Models\Track::class, 'favorites');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,5 +48,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+
+
     }
 }

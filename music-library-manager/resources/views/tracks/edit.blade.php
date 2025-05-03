@@ -1,33 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-4">Edit Track</h1>
+    <div class="container">
+        <h1>Edit Track</h1>
 
-    <form method="POST" action="{{ route('tracks.update', $track) }}">
-        @csrf
-        @method('PUT')
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <div class="mb-4">
-            <label>Title:</label>
-            <input name="title" class="border p-2 w-full" value="{{ $track->title }}" required>
-        </div>
+        <form action="{{ route('tracks.update', $track->id) }}" method="POST">
+            @csrf
+            @method('PATCH')
 
-        <div class="mb-4">
-            <label>Duration (mins):</label>
-            <input name="duration" type="number" class="border p-2 w-full" value="{{ $track->duration }}" required>
-        </div>
+            <div class="form-group">
+                <label for="title">Track Title</label>
+                <input type="text" name="title" id="title" class="form-control" value="{{ old('title', $track->title) }}" required>
+            </div>
 
-        <div class="mb-4">
-            <label>Album:</label>
-            <select name="album_id" class="border p-2 w-full">
-                @foreach ($albums as $album)
-                    <option value="{{ $album->id }}" {{ $track->album_id == $album->id ? 'selected' : '' }}>
-                        {{ $album->title }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="duration">Duration (in seconds)</label>
+                <input type="number" name="duration" id="duration" class="form-control" value="{{ old('duration', $track->duration) }}" required>
+            </div>
 
-        <button class="bg-blue-500 text-white px-4 py-2 rounded">Update Track</button>
-    </form>
+            <div class="form-group">
+                <label for="album_id">Album</label>
+                <select name="album_id" id="album_id" class="form-control" required>
+                    @foreach($albums as $album)
+                        <option value="{{ $album->id }}" {{ $album->id == $track->album_id ? 'selected' : '' }}>
+                            {{ $album->title }} - {{ $album->artist }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Update Track</button>
+        </form>
+    </div>
 @endsection

@@ -1,27 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-4">Edit Album</h1>
+    <div class="container">
+        <h1>Edit Album</h1>
 
-    <form method="POST" action="{{ route('albums.update', $album) }}">
-        @csrf
-        @method('PUT')
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <div>
-            <label>Title:</label>
-            <input name="title" class="border p-2" value="{{ $album->title }}" required>
-        </div>
+        <form action="{{ route('albums.update', $album->id) }}" method="POST">
+            @csrf
+            @method('PATCH')
 
-        <div>
-            <label>Artist:</label>
-            <input name="artist" class="border p-2" value="{{ $album->artist }}" required>
-        </div>
+            <div class="form-group">
+                <label for="title">Album Title</label>
+                <input type="text" name="title" id="title" class="form-control" value="{{ old('title', $album->title) }}" required>
+            </div>
 
-        <div>
-            <label>Release Date:</label>
-            <input type="date" name="release_date" class="border p-2" value="{{ $album->release_date }}" required>
-        </div>
+            <div class="form-group">
+                <label for="artist">Artist</label>
+                <input type="text" name="artist" id="artist" class="form-control" value="{{ old('artist', $album->artist) }}" required>
+            </div>
 
-        <button class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Update</button>
-    </form>
+            <button type="submit" class="btn btn-primary mt-3">Update Album</button>
+        </form>
+    </div>
 @endsection
